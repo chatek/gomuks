@@ -1,0 +1,193 @@
+.agent-directory {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.agent-directory-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16px 16px 8px;
+	border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+
+.agent-directory-header h2 {
+	margin: 0;
+	font-size: 1.1rem;
+	font-weight: 600;
+}
+
+.close-btn {
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 1.2rem;
+	padding: 4px 8px;
+	border-radius: 4px;
+	color: var(--text-color, #333);
+}
+
+.close-btn:hover {
+	background: var(--hover-bg, #f0f0f0);
+}
+
+.agent-directory-search {
+	padding: 12px 16px;
+}
+
+.agent-directory-search input {
+	width: 100%;
+	padding: 8px 12px;
+	border: 1px solid var(--border-color, #ddd);
+	border-radius: 6px;
+	font-size: 0.9rem;
+	box-sizing: border-box;
+}
+
+.agent-directory-loading,
+.agent-directory-empty {
+	padding: 32px 16px;
+	text-align: center;
+	color: var(--secondary-text, #888);
+	font-size: 0.9rem;
+}
+
+.agent-directory-grid {
+	flex: 1;
+	overflow-y: auto;
+	padding: 8px 16px 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.agent-card {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 12px;
+	border: 1px solid var(--border-color, #e0e0e0);
+	border-radius: 8px;
+	cursor: pointer;
+	transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.agent-card:hover {
+	border-color: var(--accent-color, #1a73e8);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.agent-card.selected {
+	border-color: var(--accent-color, #1a73e8);
+	background: var(--selected-bg, #f0f7ff);
+}
+
+.agent-card-header {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+}
+
+.agent-card-avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background: var(--accent-color, #1a73e8);
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 600;
+	font-size: 1rem;
+	flex-shrink: 0;
+}
+
+.agent-card-names {
+	flex: 1;
+	min-width: 0;
+}
+
+.agent-card-name {
+	font-weight: 600;
+	font-size: 0.95rem;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.agent-card-id {
+	font-size: 0.75rem;
+	color: var(--secondary-text, #888);
+	font-family: monospace;
+	margin-top: 2px;
+}
+
+.agent-card-steward {
+	font-size: 0.75rem;
+	color: var(--secondary-text, #888);
+	margin-top: 2px;
+	font-style: italic;
+}
+
+.agent-status {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	flex-shrink: 0;
+	margin-top: 6px;
+}
+
+.agent-status.online {
+	background: #34a853;
+}
+
+.agent-status.offline {
+	background: #ccc;
+}
+
+.agent-card-metrics {
+	display: flex;
+	gap: 16px;
+}
+
+.metric {
+	display: flex;
+	align-items: baseline;
+	gap: 4px;
+	font-size: 0.8rem;
+	color: var(--secondary-text, #666);
+}
+
+.metric-value {
+	font-weight: 600;
+	color: var(--text-color, #333);
+}
+
+.connect-btn {
+	padding: 6px 12px;
+	border: 1px solid var(--accent-color, #1a73e8);
+	border-radius: 6px;
+	background: transparent;
+	color: var(--accent-color, #1a73e8);
+	font-size: 0.85rem;
+	cursor: pointer;
+	transition: background 0.15s, color 0.15s;
+	align-self: flex-start;
+}
+
+.connect-btn:hover:not(:disabled) {
+	background: var(--accent-color, #1a73e8);
+	color: white;
+}
+
+.connect-btn.connected {
+	background: var(--accent-color, #1a73e8);
+	color: white;
+	border-color: var(--accent-color, #1a73e8);
+}
+
+.connect-btn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}

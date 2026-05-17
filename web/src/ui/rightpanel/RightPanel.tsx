@@ -13,122 +13,173 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import type { IWidget } from "matrix-widget-api"
-import { JSX, use } from "react"
-import type { UserID } from "@/api/types"
-import MainScreenContext, { MainScreenContextFields } from "../MainScreenContext.ts"
-import ThreadView from "../timeline/ThreadView.tsx"
-import ErrorBoundary from "../util/ErrorBoundary.tsx"
-import ElementCall from "../widget/ElementCall.tsx"
-import LazyWidget from "../widget/LazyWidget.tsx"
-import MemberList from "./MemberList.tsx"
-import Notifications from "./Notifications.tsx"
-import PinnedMessages from "./PinnedMessages.tsx"
-import UserInfo from "./UserInfo.tsx"
-import WidgetList from "./WidgetList.tsx"
-import BackIcon from "@/icons/back.svg?react"
-import CloseIcon from "@/icons/close.svg?react"
-import "./RightPanel.css"
+import type { IWidget } from "matrix-widget-api";
+import { JSX, use } from "react";
+import type { UserID } from "@/api/types";
+import MainScreenContext, { MainScreenContextFields } from "../MainScreenContext.ts";
+import ThreadView from "../timeline/ThreadView.tsx";
+import ErrorBoundary from "../util/ErrorBoundary.tsx";
+import ElementCall from "../widget/ElementCall.tsx";
+import LazyWidget from "../widget/LazyWidget.tsx";
+import MemberList from "./MemberList.tsx";
+import Notifications from "./Notifications.tsx";
+import PinnedMessages from "./PinnedMessages.tsx";
+import UserInfo from "./UserInfo.tsx";
+import WidgetList from "./WidgetList.tsx";
+import AgentSidebar from "./AgentSidebar.tsx";
+import AgentDirectory from "./AgentDirectory.tsx";
+import A2AGraphFeed from "./A2AGraphFeed.tsx";
+import BackIcon from "@/icons/back.svg?react";
+import CloseIcon from "@/icons/close.svg?react";
+import "./RightPanel.css";
 
 export type RightPanelType =
-	"pinned-messages" | "notifications" | "members" | "widgets" | "widget" | "user" | "thread" | "element-call"
+	| "pinned-messages"
+	| "notifications"
+	| "members"
+	| "widgets"
+	| "widget"
+	| "user"
+	| "thread"
+	| "element-call"
+	| "agent"
+	| "agent-directory"
+	| "a2a-graph-feed";
 
 interface RightPanelSimpleProps {
-	type: "pinned-messages" | "notifications" | "members" | "widgets" | "element-call"
+	type: "pinned-messages" | "notifications" | "members" | "widgets" | "element-call" | "a2a-graph-feed";
 }
 
 interface RightPanelWidgetProps {
-	type: "widget"
-	info: IWidget
+	type: "widget";
+	info: IWidget;
 }
 
 interface RightPanelUserProps {
-	type: "user"
-	userID: UserID
+	type: "user";
+	userID: UserID;
+}
+
+interface RightPanelAgentProps {
+	type: "agent";
+	agentNkey: string;
+}
+
+interface RightPanelAgentDirectoryProps {
+	type: "agent-directory";
 }
 
 interface RightPanelThreadProps {
-	type: "thread"
-	threadRoot: string
+	type: "thread";
+	threadRoot: string;
 }
 
 export type RightPanelProps =
-	RightPanelUserProps
+	| RightPanelUserProps
+	| RightPanelAgentProps
+	| RightPanelAgentDirectoryProps
 	| RightPanelWidgetProps
 	| RightPanelThreadProps
-	| RightPanelSimpleProps
+	| RightPanelSimpleProps;
 
 function getTitle(props: RightPanelProps): string {
 	switch (props.type) {
-	case "pinned-messages":
-		return "Pinned Messages"
-	case "notifications":
-		return "Notification Center"
-	case "members":
-		return "Room Members"
-	case "widgets":
-		return "Widgets in room"
-	case "widget":
-		return props.info.name || "Widget"
-	case "element-call":
-		return "Element Call"
-	case "user":
-		return "User Info"
-	case "thread":
-		return "Thread"
+		case "pinned-messages":
+			return "Pinned Messages";
+		case "notifications":
+			return "Notification Center";
+		case "members":
+			return "Room Members";
+		case "widgets":
+			return "Widgets in room";
+		case "widget":
+			return props.info.name || "Widget";
+		case "element-call":
+			return "Element Call";
+		case "user":
+			return "User Info";
+		case "agent":
+			return "Agent Profile";
+		case "thread":
+			return "Thread";
+		case "agent-directory":
+			return "Explore Agents";
+		case "a2a-graph-feed":
+			return "A2A Graph Feed";
 	}
 }
 
 function renderRightPanelContent(props: RightPanelProps, mainScreen: MainScreenContextFields): JSX.Element | null {
 	switch (props.type) {
-	case "pinned-messages":
-		return <PinnedMessages />
-	case "notifications":
-		return <Notifications />
-	case "members":
-		return <MemberList />
-	case "widgets":
-		return <WidgetList />
-	case "element-call":
-		return <ElementCall onClose={mainScreen.closeRightPanel} />
-	case "widget":
-		return <LazyWidget info={props.info} onClose={mainScreen.closeRightPanel} />
-	case "user":
-		return <UserInfo userID={props.userID} />
-	case "thread":
-		return <ThreadView key={props.threadRoot} threadRoot={props.threadRoot} />
+		case "pinned-messages":
+			return <PinnedMessages />;
+		case "notifications":
+			return <Notifications />;
+		case "members":
+			return <MemberList />;
+		case "widgets":
+			return <WidgetList />;
+		case "element-call":
+			return <ElementCall onClose={mainScreen.closeRightPanel} />;
+		case "widget":
+			return <LazyWidget info={props.info} onClose={mainScreen.closeRightPanel} />;
+		case "user":
+			return <UserInfo userID={props.userID} />;
+		case "agent":
+			return <AgentSidebar agentNkey={props.agentNkey} onClose={mainScreen.closeRightPanel} />;
+		case "thread":
+			return <ThreadView key={props.threadRoot} threadRoot={props.threadRoot} />;
+		case "agent-directory":
+			return (
+				<AgentDirectory
+					onSelectAgent={(agentNkey) => mainScreen.setRightPanel({ type: "agent", agentNkey })}
+					onClose={mainScreen.closeRightPanel}
+				/>
+			);
+		case "a2a-graph-feed":
+			return (
+				<A2AGraphFeed
+					agentNkey=""
+					onSelectAgent={(agentNkey) => mainScreen.setRightPanel({ type: "agent", agentNkey })}
+					onOpenDirectory={() => mainScreen.setRightPanel({ type: "agent-directory" })}
+				/>
+			);
 	}
 }
 
 const RightPanel = (props: RightPanelProps) => {
-	const mainScreen = use(MainScreenContext)
-	let backButton: JSX.Element | null = null
+	const mainScreen = use(MainScreenContext);
+	let backButton: JSX.Element | null = null;
 	if (props.type === "user") {
-		backButton = <button
-			data-target-panel="members"
-			onClick={mainScreen.clickRightPanelOpener}
-		><BackIcon/></button>
+		backButton = (
+			<button data-target-panel="members" onClick={mainScreen.clickRightPanelOpener}>
+				<BackIcon />
+			</button>
+		);
 	} else if (props.type === "element-call" || props.type === "widget") {
-		backButton = <button
-			data-target-panel="widgets"
-			onClick={mainScreen.clickRightPanelOpener}
-		><BackIcon/></button>
+		backButton = (
+			<button data-target-panel="widgets" onClick={mainScreen.clickRightPanelOpener}>
+				<BackIcon />
+			</button>
+		);
 	}
-	return <div className="right-panel">
-		<div className="mobile-event-menu-container" id="mobile-thread-event-menu-container"/>
-		<div className="right-panel-header">
-			<div className="left-side">
-				{backButton}
-				<div className="panel-name">{getTitle(props)}</div>
+	return (
+		<div className="right-panel">
+			<div className="mobile-event-menu-container" id="mobile-thread-event-menu-container" />
+			<div className="right-panel-header">
+				<div className="left-side">
+					{backButton}
+					<div className="panel-name">{getTitle(props)}</div>
+				</div>
+				<button onClick={mainScreen.closeRightPanel}>
+					<CloseIcon />
+				</button>
 			</div>
-			<button onClick={mainScreen.closeRightPanel}><CloseIcon/></button>
+			<div className={`right-panel-content ${props.type}`}>
+				<ErrorBoundary thing="right panel content">{renderRightPanelContent(props, mainScreen)}</ErrorBoundary>
+			</div>
 		</div>
-		<div className={`right-panel-content ${props.type}`}>
-			<ErrorBoundary thing="right panel content">
-				{renderRightPanelContent(props, mainScreen)}
-			</ErrorBoundary>
-		</div>
-	</div>
-}
+	);
+};
 
-export default RightPanel
+export default RightPanel;
